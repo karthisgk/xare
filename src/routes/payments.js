@@ -153,7 +153,7 @@ Payments.prototype.getData = (paymentId, cb) => {
 Payments.prototype.calculateShares = (paymentId, payment = '') => {
 
 	var calculate = (paymentId, payment) => {
-		var actualMembersCount = payment.member.length;
+		var actualMembersCount = payment.members.length;
 		config.db.get('objections', {paymentId: paymentId, satus: 'accepted'}, objections => {
 			actualMembersCount = actualMembersCount - objections.length;
 			var equalShareAmount = parseInt(payment.amount) / actualMembersCount;
