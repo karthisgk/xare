@@ -28,6 +28,7 @@ function Routes(app){
 	app.post('/setpassword', User.setPassword);
 	app.post('/oauthsignin', upload.single('photoUrl'), User.OAuthSignin);
 	app.post('/updateuser', upload.single('photoUrl'), User.auth(), User.updateUser);
+	app.get('/getgroupsmembers', User.auth(), User.getGroupsMembers);
 
 	app.post('/groupaction', upload.single('icon'), User.auth(), Groups.index);
 	app.get('/getgroups', User.auth(), Groups.getData);

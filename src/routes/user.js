@@ -532,4 +532,41 @@ User.prototype.uploadFileByBase64 = function(enCodeData, dirPath, fileName, cb){
     }
 };
 
+User.prototype.getGroupsMembers = (req, res) => {
+	if(!req.hasOwnProperty('accessToken') ||
+		!req.hasOwnProperty('accessUser')){
+		res.json(common.getResponses('005', {}));
+		return;
+	}
+
+	if(!req.query.groupId) {
+		res.json(common.getResponses('003', {}));
+		return;
+	}
+
+	var groupId = req.query.groupId;
+	config.db.get('groups', {_id: groupId}, data => {
+		if(data.length == 0){
+			res.json(common.getResponses('003', {}));
+			return;
+		}
+		data = data[0];
+
+		if(data.members.indexOf(req.accessUser._id) == -1){
+			res.json(common.getResponses('037', {}));
+			return;
+		}
+
+		var $wh = { _id: {$in: data.members } };
+		var lookups = [];
+		var matchAnd = [$wh];
+		lookups.push({ $project : { password: 0, Verification_Mail : 0 , accessToken : 0 } });
+		lookups.push({ $match: {$and: matchAnd} });
+
+		config.db.customGetData('user', lookups, (err, users) => {
+			res.json(common.getResponses('020', {}));
+		});
+	});
+};
+
 module.exports = User;

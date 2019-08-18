@@ -23,10 +23,13 @@ Groups.prototype.index = (req, res) => {
 
 	var dbAction = function(actionData, cb){
 		if(!req.body.groupId){
-			actionData.members = [];
+			actionData.members = [req.accessUser._id];
 			if(req.body.members){
-				if(typeof req.body.members.length == 'number')
-					actionData.members = req.req.body.members;
+				if(typeof req.body.members.length == 'number'){
+					if(req.body.members.indexOf(req.accessUser._id) > -1)
+						req.body.members.splice(req.body.members.indexOf(req.accessUser._id), 1);
+					actionData.members = actionData.members.cancat(req.body.members);
+				}
 			}
 			actionData.admins = [req.accessUser._id]
 			actionData.createdBy = req.accessUser._id;
@@ -167,7 +170,7 @@ Groups.prototype.getData = (req, res) => {
 		lookups.push({ $skip: parseInt(req.query.offset)});
 	}
 
-	config.db.customGetData('groups', lookups, groups => {
+	config.db.customGetData('groups', lookups, (err, groups) => {
 		var rt = groups;
 		if(typeof req.query.groupId == 'string' && rt.length == 1){
 			rt = rt[0];		
