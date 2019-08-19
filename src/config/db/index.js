@@ -3,8 +3,8 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 var collection = require('./collections.js');
 
-const url = true ? 'mongodb://localhost:27017'
-: 'mongodb://root:toor@13.232.133.211:27017';
+const url = true ? 'mongodb://root:toor@localhost:27017'
+: 'mongodb://root:toor@13.233.208.206:27017';
 const dbName = 'xare';
 
 
@@ -75,6 +75,13 @@ DB.prototype.customGetData = function(tbName, lookups, cb){
 		db.collection(tbName).aggregate(lookups, cb);
 	});
 };
+
+/*db.createUser(
+   {
+       user: "root", 
+       pwd: "toor", 
+       roles:["root"]
+   })*/
 
 
 module.exports = DB;
