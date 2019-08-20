@@ -184,11 +184,12 @@ User.prototype.OAuthSignin = function(req, res){
 				Mobile_Number: mobileNumber,
 				User_Type: common.getUserType(1),
 				isActivated: 1,
-				avatar: fileName,
+				avatar: '',
 				accessToken: [token]
 			};
 
 			self.uploadAvatar(req, res, newUser._id, fileName => {
+				newUser.avatar = fileName;
 				config.db.insert('user', newUser, (err, result) => {
 					res.json(common.getResponses('020', {accessToken: token}));
 			    });
