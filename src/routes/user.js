@@ -151,13 +151,14 @@ User.prototype.OAuthSignin = function(req, res){
 	var emailAddress = req.body.emailAddress ? req.body.emailAddress : '';
 	var mobileNumber = req.body.mobileNumber ? req.body.mobileNumber : '';
 	var token = common.getCrptoToken(32);
+	var $or = [];
+	if(typeof req.body.emailAddress != 'undefined')
+	    $or.push({Email_Id: emailAddress});
+	if(typeof req.body.mobileNumber != 'undefined')
+	    $or.push({Mobile_Number: mobileNumber});
 	var cond = {
 		$and: [				
-			{$or: [
-					{Email_Id: emailAddress},
-					{Mobile_Number: mobileNumber}
-				]
-			},
+			{$or: $or},
 			{isDeleted: {$ne: 1}}
 		]
 	};
