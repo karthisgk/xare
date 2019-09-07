@@ -562,8 +562,31 @@ User.prototype.getGroupsMembers = (req, res) => {
 		lookups.push({ $match: {$and: matchAnd} });
 
 		config.db.customGetData('user', lookups, (err, users) => {
-			res.json(common.getResponses('020', {}));
+			res.json(common.getResponses('020', users));
 		});
+	});
+};
+
+User.prototype.getRegisterUser = (req, res) => {
+	if(!req.hasOwnProperty('accessToken') ||
+		!req.hasOwnProperty('accessUser')){
+		res.json(common.getResponses('005', {}));
+		return;
+	}
+
+	if(!req.body.contacts.length){
+		res.json(common.getResponses('003', {}));
+		return;
+	}
+
+	var $wh = { Mobile_Number: {$in: req.body.contacts } };
+	var lookups = [];
+	var matchAnd = [$wh];
+	lookups.push({ $project : { password: 0, Verification_Mail : 0 , accessToken : 0 } });
+	lookups.push({ $match: {$and: matchAnd} });
+
+	config.db.customGetData('user', lookups, (err, users) => {
+		res.json(common.getResponses('020', users));
 	});
 };
 

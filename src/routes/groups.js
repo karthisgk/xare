@@ -164,7 +164,7 @@ Groups.prototype.getData = (req, res) => {
 
 	lookups.push({ $match: {$and: matchAnd} });
 	if(req.query.offset) {
-		var lmt = typeof req.query.limit == 'undefined' ? 3 : req.query.limit;
+		var lmt = typeof req.query.limit == 'undefined' ? 10 : req.query.limit;
 		lmt = parseInt(req.query.offset) + lmt;
 		lookups.push({ $limit: parseInt(lmt)});
 		lookups.push({ $skip: parseInt(req.query.offset)});
