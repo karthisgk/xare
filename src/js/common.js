@@ -188,6 +188,11 @@ var responses = [
 			code: codeKey + '042',
 			message: 'Must Upload Atleast one image',
 			data: {}
+	},
+	{
+			code: codeKey + '043',
+			message: 'Profile is not exist!',
+			data: {}
 	}
 ];
 
