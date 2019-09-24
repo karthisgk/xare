@@ -30,6 +30,70 @@ function User() {
 	};
 };
 
+User.prototype.isUserExist = (req, res) => {
+	var self = new User();
+	if((!req.body.emailAddress &&
+		!req.body.mobileNumber)){
+		res.json(common.getResponses('003', {}));
+		return;
+	}
+
+	var emailAddress = req.body.emailAddress ? req.body.emailAddress : '';
+	var mobileNumber = req.body.mobileNumber ? req.body.mobileNumber : '';
+	var token = common.getCrptoToken(32);
+	var $or = [];
+	if(typeof req.body.emailAddress != 'undefined')
+	    $or.push({Email_Id: emailAddress});
+	if(typeof req.body.mobileNumber != 'undefined')
+	    $or.push({Mobile_Number: mobileNumber});
+	var lookups = [];
+    lookups.push({
+        $match: {
+            $and: [				
+				{$or: $or},
+				{isDeleted: {$ne: 1}}
+			]                 
+        }
+    });
+    lookups.push({ $project : { password: 0, Verification_Mail : 0 , accessToken : 0 } });
+	config.db.customGetData('user', lookups,  (err, data) => {
+		if(data.length > 0){
+			res.json(common.getResponses('020', data[0]));
+		}else
+			res.json(common.getResponses('043', {}));
+	});
+};
+
+User.prototype.Get_Me = (req, res) => {
+	if(!req.hasOwnProperty('accessToken') || !req.hasOwnProperty('accessUser')){
+		res.json(common.getResponses('005', {}));
+		return;
+	}
+	var token = req.accessToken;
+	var user = req.accessUser;
+	if(user.hasOwnProperty('avatar'))
+		user.avatar = config.liveUrl + 'image/avatars/' + user.avatar;
+	if(user.hasOwnProperty('DOB')){
+		var dob = user.DOB.split('-');
+		if(dob.length > 2)
+			user.DOB = dob[2] + '/' + dob[1] + '/' + dob[0];
+	}
+	delete user.password;
+	delete user.accessToken;
+	delete user.Verification_Mail;
+	var syncCount = 0, actualCount = 0;	
+
+	var sendResponse = (user) => {
+
+		if(actualCount != syncCount)
+			return;
+
+		res.json(common.getResponses('020', user));
+	};
+
+	sendResponse(user);
+};
+
 User.prototype.signup = function(req, res){
 	var self = new User();
 	if(!req.body.First_Name ||

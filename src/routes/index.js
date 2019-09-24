@@ -23,6 +23,8 @@ function Routes(app){
 	app.post('/login', User.login);
 	app.post('/signup', User.signup);
 	app.get('/logout', User.auth(), User.logOut);
+	app.get('/getme', User.auth(), User.Get_Me);
+	app.post('/profileexist', User.isUserExist);
 	app.get('/validateuser', User.validateToken);
 	app.post('/forgetpassword', User.forgetPassword);
 	app.post('/setpassword', User.setPassword);
