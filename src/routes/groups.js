@@ -28,7 +28,7 @@ Groups.prototype.index = (req, res) => {
 				if(typeof req.body.members.length == 'number'){
 					if(req.body.members.indexOf(req.accessUser._id) > -1)
 						req.body.members.splice(req.body.members.indexOf(req.accessUser._id), 1);
-					actionData.members = actionData.members.cancat(req.body.members);
+					actionData.members = actionData.members.concat(req.body.members);
 				}
 			}
 			actionData.admins = [req.accessUser._id]
@@ -159,20 +159,20 @@ Groups.prototype.getData = (req, res) => {
 	var lookups = [];
 	var matchAnd = [];
 	matchAnd.push( {members: {$all: [req.accessUser._id]}} );
-	if(typeof req.query.groupId == 'string')
-		matchAnd.push({_id: req.query.groupId});
+	if(typeof req.body.groupId == 'string')
+		matchAnd.push({_id: req.body.groupId});
 
 	lookups.push({ $match: {$and: matchAnd} });
-	if(req.query.offset) {
-		var lmt = typeof req.query.limit == 'undefined' ? 10 : req.query.limit;
-		lmt = parseInt(req.query.offset) + lmt;
+	if(req.body.offset) {
+		var lmt = typeof req.body.limit == 'undefined' ? 10 : parseInt(req.body.limit);
+		lmt = parseInt(req.body.offset) + lmt;
 		lookups.push({ $limit: parseInt(lmt)});
-		lookups.push({ $skip: parseInt(req.query.offset)});
+		lookups.push({ $skip: parseInt(req.body.offset)});
 	}
 
 	config.db.customGetData('groups', lookups, (err, groups) => {
 		var rt = groups;
-		if(typeof req.query.groupId == 'string' && rt.length == 1){
+		if(typeof req.body.groupId == 'string' && rt.length == 1){
 			rt = rt[0];		
 			config.db.get('payments', {groupId: rt._id}, payments => {
 				rt.payments = [];

@@ -34,10 +34,12 @@ function Routes(app){
 	app.post('/getRegisterUser', User.auth(), User.getRegisterUser);
 
 	app.post('/groupaction', upload.single('icon'), User.auth(), Groups.index);
-	app.get('/getgroups', User.auth(), Groups.getData);
+	app.post('/getgroups', User.auth(), Groups.getData);
+	
 	app.post('/makepayment', User.auth(), Payment.make);
 	app.post('/raiseobjection', User.auth(), Payment.raiseObjection);
 	app.post('/acceptobjection', User.auth(), Payment.acceptObjection);
+	app.post('/getpayments', User.auth(), Payment.getPayments);
 
 	app.get('/image/:dir/:img', function(req, res){
 
