@@ -75,6 +75,8 @@ User.prototype.verifyOtp = function(req, res){
 				return;
 			}
 			const token = common.getCrptoToken(32);
+			matchUser.otp = '';
+			matchUser.otpExpiriesIn = '';
 			matchUser.accessToken.push(token);
 			matchUser.save();
 			res.json(common.getResponses('020', {accessToken: token}));
@@ -107,8 +109,8 @@ User.prototype.signIn = function(req, res){
 			}
 		}
 		request(clientServerOptions, function (error, response) {
-			/*console.log(error,response.body);
-			return;*/
+			console.log(error,response.body);
+			return;
 		});
 	}
 
