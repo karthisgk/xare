@@ -32,7 +32,7 @@ function decrypt(text) {
  return decrypted.toString();
 }
 
-var codeKey = 'devlabs_';
+var codeKey = 'xare_';
 var responses = [
 	{
 		code: codeKey + '001',
@@ -111,7 +111,7 @@ var responses = [
 	},
 	{
 			code: codeKey + '023',
-			message: 'Account Does\'nt Activated',
+			message: 'Account Doesn\'t Activated',
 			data: {}
 	},
 	{
@@ -193,12 +193,48 @@ var responses = [
 			code: codeKey + '043',
 			message: 'Profile is not exist!',
 			data: {}
+	},
+	{
+		code: codeKey + '044',
+		message: 'incorrect otp',
+		data: {}
+	},
+	{
+		code: codeKey + '045',
+		message: 'otp expired',
+		data: {}
+	},
+	{
+		code: codeKey + '046',
+		message: 'profile not completed',
+		data: {}
+	},
+	{
+		code: codeKey + '047',
+		message: 'not yet chat',
+		data: {}
 	}
 ];
 
 var common = {
 	encrypt: encrypt,
 	decrypt: decrypt,
+	generateOTP: function (n = 6) { 
+		var digits = '0123456789'; 
+		let OTP = ''; 
+		for (let i = 0; i < n; i++ ) { 
+			OTP += digits[Math.floor(Math.random() * 10)]; 
+		}
+		return OTP;
+	},
+	addTime: function(t, h, m){   
+		var addMinutes = (date, min) => {
+			return new Date(date.getTime() + min*60000);
+		};
+		t.setTime(t.getTime() + (h*60*60*1000)); 
+		t = addMinutes(t, m);
+		return t;
+	},
 	uniqueid: function() {
 		  function s4() {
 		    return Math.floor((1 + Math.random()) * 0x10000)
@@ -206,6 +242,18 @@ var common = {
 		      .substring(1);
 		  }
 		  return s4();
+	},
+	validMobileNumber: (num) => {
+		if(typeof num == "string" && num.length < 10) {
+			return false;
+		}
+		if(!/^[0-9]+$/.test(num)){
+			return false;
+		}
+		return true;
+	},
+	getUserProjection: () => {
+		return {  accessToken : 0, otp: 0, otpExpiriesIn: 0 };
 	},
 	current_time: function(t) {
 		/*sudo timedatectl set-timezone Asia/Kolkata*/
@@ -268,6 +316,21 @@ var common = {
 			}
 		});
 		return rt;
+	},
+	getPassFields: function(passField = [], actualFields = {}) {
+		var fields = {};
+		Object.keys(actualFields).forEach(key => {
+			if(passField.indexOf(key) > -1){
+				fields[key] = actualFields[key];
+			}
+		});
+		return fields;
+	},
+	isJson: function(str) {
+		try {
+			return JSON.parse(str);
+		}catch(e) {}
+		return false;
 	},
 	getCrptoToken: function(n = 16){
 		return crypto.randomBytes(n).toString('hex');

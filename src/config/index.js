@@ -1,15 +1,16 @@
 
 var DB = require('./db');
 var SMTP = require('./SMTPmailConfig.js');
+const { liveUrl } = require('../js/const');
 
 var main = {
 	development: {
 		name: 'xare',
-		port: process.env.PORT || 5000
+		port: process.env.PORT || 4040
 	},
 	production: {
 		name: 'xare',
-		port: process.env.PORT || 5000
+		port: process.env.PORT || 4040
 	},
 	db: new DB(),
 	smtp_config: {
@@ -21,8 +22,15 @@ var main = {
 	        pass: ""
 	    }
 	},
+	sms_config: {
+		apikey: '3S6LNE20K8ZPQXJ2PGOWTYBIJ18K7HAT',
+		secret: '4C82O55NQ4AION21',
+		senderid: 'karthisgk',
+		usetype: 'stage'
+	},
 	session_time: 999999999999,
-	liveUrl: 'http://13.232.133.211/',
+	liveUrl: liveUrl,
+	frontEndUrl: 'http://localhost:8080/',
 	initApp: function(dir){
 		main.app_dir = dir;
 		return main;
@@ -35,6 +43,17 @@ var main = {
 			else
 				smtp = new SMTP(main.smtp_config);
 			cb(smtp);
+		});
+	},
+	getSettings: (req, res, next) => {
+		new DB().get('settings', {}, settings => {
+			if(settings.length) {
+				req.generalSettings = settings[0];
+				next();
+			} else {
+				res.status(400);
+				res.send('None shall pass');
+			}
 		});
 	}
 };
