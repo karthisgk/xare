@@ -1,4 +1,4 @@
-const PRODUCTION = false;
+const PRODUCTION = true;
 module.exports = {
     PRODUCTION,
     dbName: 'xare',
