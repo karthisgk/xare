@@ -99,7 +99,7 @@ User.prototype.signIn = function(req, res){
 		paramData.phone = mobileNumber;
 		paramData.message = 'Your otp is ' + otp;
 		var clientServerOptions = {
-			uri: 'http://www.way2sms.com/api/v1/sendCampaign',
+			uri: 'https://www.sms4india.com/api/v1/sendCampaign',
 			body: JSON.stringify(paramData),
 			method: 'POST',
 			headers: {
