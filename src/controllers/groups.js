@@ -131,6 +131,7 @@ Groups.prototype.getData = (req, res) => {
 		matchAnd.push({_id: req.body.groupId});
 
 	lookups.push({ $match: {$and: matchAnd} });
+	lookups.push({ $sort : {"createdAt.date": -1} })
 	if(typeof req.body.offset != 'undefined') {
 		var lmt = typeof req.body.limit == 'undefined' ? 10 : parseInt(req.body.limit);
 		lmt = parseInt(req.body.offset) + lmt;
