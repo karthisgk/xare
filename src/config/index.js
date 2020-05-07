@@ -1,16 +1,16 @@
 
 var DB = require('./db');
 var SMTP = require('./SMTPmailConfig.js');
-const { liveUrl } = require('../js/const');
+const { liveUrl, port } = require('../js/const');
 
 var main = {
 	development: {
 		name: 'xare',
-		port: process.env.PORT || 4040
+		port: process.env.PORT || port
 	},
 	production: {
 		name: 'xare',
-		port: process.env.PORT || 4040
+		port: process.env.PORT || port
 	},
 	db: new DB(),
 	smtp_config: {

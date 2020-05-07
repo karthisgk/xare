@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"xare.chats"}],"uuid":"ca9a9f14678d4eabb8708a0ac895d100"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"xare.chats"}],"uuid":"29465ef498854e2d8de85940e1f78006"}
