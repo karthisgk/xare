@@ -1,6 +1,6 @@
 const PRODUCTION = false;
 const port = 4040;
-const IP = 'office.d-devlabs.com';
+const IP = 'server.phoenixmarketing.in';
 module.exports = {
     port,
     PRODUCTION,
